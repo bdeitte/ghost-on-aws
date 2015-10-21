@@ -163,6 +163,10 @@ Set up email (optional)
 Still working on this myself. No simple, free options. Going to try out
 https://avix.co/blog/creating-your-own-mail-server-amazon-ec2-postfix-dovecot-postgresql-amavis-spamassassin-apache-and-squirrelmail-part-1/
 
+More application tinkering
+----------------
+Need to add info about adding in comments, log rotation (if needed, haven't looked), and seeing traffic (through log grepping for now).
+
 Set up EBS backup
 ----------------
 Just doing this manually in the UI right now.  Need to automate. Lots of scripts out there for this.
