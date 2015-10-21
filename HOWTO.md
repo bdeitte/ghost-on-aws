@@ -2,7 +2,7 @@ Instructions on setting up your own website using Ghost on AWS
 
 Before you begin
 ----------------
-1. This is a horribly-rough draft. Still setting things up myself and iterating on it. Still setting things up myself. User beware. PRs welcome.
+1. This is a horribly-rough draft. Still setting things up myself and iterating on it.  User beware. PRs welcome.
 2. You should probably just use https://ghost.org/.  They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost.  These instructions are for those with unique requirements or who like tinkering around on AWS.  (I just happen to fall into both categories.)
 3. This is a very manual process.  Why not Docker, Chef, or your favorite config/deploy tool?  Perhaps later I will try something better, or at the very least I'll be adding some kind of scripting for updates.  I first wanted to understand the basics of what's going on here.  (See the previous point about tinkering.)
 
