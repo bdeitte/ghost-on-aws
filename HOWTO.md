@@ -1,22 +1,22 @@
-Instructions on setting up your own website using Ghost on AWS
+Instructions on setting up your own website using Ghost, nginx, and Node 4.x on AWS
 
 Before you begin
 ----------------
-1. This is a horribly-rough draft. Still setting things up myself and iterating on it.  User beware. PRs welcome.
-2. You should probably just use https://ghost.org/.  They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost.  These instructions are for those with unique requirements or who like tinkering around on AWS.  (I just happen to fall into both categories.)
-3. This is a very manual process.  Why not Docker, Chef, or your favorite config/deploy tool?  Perhaps later I will try something better, or at the very least I'll be adding some kind of scripting for updates.  I first wanted to understand the basics of what's going on here.  (See the previous point about tinkering.)
+1. This is a rough draft. As you'll see in the notes below, I'm still setting things up and iterating on the guide. User beware. PRs welcome.
+2. You should probably stop reading and use https://ghost.org/ instead. They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.  (I just happen to fall into both categories.)
+3. This is a very manual process.  Why not Docker, Chef, or your favorite config/deploy tool?  I might try something better, or at the very least I'll be adding some kind of scripting for updates. But I first wanted to get something working and understand the basics of what's going on here.  (See the previous point about tinkering.)
 
 Initial Amazon setup
 ----------------
-Go through http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/get-set-up-for-amazon-ec2.html. You can skip "Create A Virtual Private Cloud" on this page.
+If you don't have an AWS account, go through http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/get-set-up-for-amazon-ec2.html. You can skip "Create A Virtual Private Cloud" on this page since you'll have a default VPC.
 
 EC2 Setup
 ----------------
-Go through http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance_linux.html. Following everything other than choosing Amazon Machine Image (step #3).  Choose the Ubuntu Server image instead.
+Go through http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance_linux.html. Following everything other than choosing Amazon Machine Image (step #3). Choose the Ubuntu Server image instead. You could choose the Amazon Image, but these instructions are written for Ubuntu.
 
 Connect to the instance
 ----------------
-Go through. http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-connect-to-instance-linux.html. Follow everything except use "ubuntu" instead of "ec2-user". For instance, to connect on Mac or Linux, you would just do this:
+Go through http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-connect-to-instance-linux.html. Follow everything except use "ubuntu" instead of "ec2-user". For instance, to connect on Mac or Linux, you would just do this:
 ```
 ssh -i /path/my-key-pair.pem ubuntu@public_dns_name
 ```
@@ -29,7 +29,7 @@ sudo apt-get update && sudo apt-get upgrade -y
 ```
 You will likely be asked the following: "A new version of /boot/grub/menu.lst is available, but the version installed currently has been locally modified.  What would you like to do about menu.lst?"  Just press enter and choose the default, "keep the local version currently installed".
 
-Install some needed libraries. Add to the list anything you may want, like emacs.
+Install some needed libraries. Add to the list anything you may want (like emacs).
 ```
 sudo apt-get install -y unzip build-essential libssl-dev git nginx
 ```
@@ -52,7 +52,7 @@ nvm use default
 
 Install Ghost
 ----------------
-Time to install Ghost.  These steps are a bit different than the usual steps, as it's getting Ghost to work with Node 4.
+Time to install Ghost.  These steps are a little different than the usual steps, as it's getting Ghost to work with Node 4.
 ```
 sudo mkdir /var/www
 sudo chown -R ubuntu:ubuntu /var/www
@@ -91,6 +91,7 @@ curl http://localhost:2368
 Create an Elastic IP
 ----------------
 Head into the AWS UI for some setup:
+
 1. In the navigation pane, choose Elastic IPs
 2. Choose Allocate New Address, and then Yes, Allocate. 
 3. Select the Elastic IP address from the list, choose Actions, and then choose Associate Address.
@@ -140,7 +141,9 @@ curl http://localhost
 Reboot and test
 ----------------
 sudo reboot.  Wait a minute for the instance to come back up, then log in again.  Then make sure the instance is still running:
+```
 curl http://localhost
+```
 (And this isn't working for me!  PM2 doesn't save as it should, and instead I have to start PM2 again as show in the pm2 start commands above.)
 
 Create Route 53 route (optional)
@@ -153,7 +156,7 @@ I did not need to change anything in nginx after this, but you do need to edit t
 ```
 vi /var/www/ghost/config.js
 ```
-You may be using the dev mode, as I am accidentily (and which you are too if you followed these instructions exactly!) so make sure to switch in the correct section.
+You may be using the dev mode, as I am accidentily (and which you are too if you followed these instructions exactly) so make sure to switch in the correct section.
 
 Set up email (optional)
 ----------------
@@ -170,11 +173,11 @@ Go through http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier
 
 Set up basic monitor(s)
 ----------------
-Fill in, not doing yet. Lots of options here.
+Fill in, not doing yet. Lots of options here- try to set up an external check of a page first. Pingdom is simple and free. RunScope is very nice if you have a subscription. There's some alerting for the EC2 instance, but I would focus on the external check first. Might have some other AWS options for this.
 
 Future updates
 ----------------
-Haven't gone through this myself, but at some point I will want to update Ghost, or Node.js, or other things on the server.  Best to do this on a newly-created snapshot where you can test this out to ensure basic functionality works.  And then you can move over the Elastic IP to flip things over.  Ghost also has some docs here in http://support.ghost.org/how-to-upgrade/
+I haven't gone through this myself, but at some point I will want to update Ghost, or Node.js, or other things on the server.  It's to do this on a newly-created snapshot where you can test this out to ensure basic functionality works.  And then you can move over the Elastic IP to flip things over.  Ghost also has some docs here in http://support.ghost.org/how-to-upgrade/
 Things to update occasionally:
 - sudo apt-get update && sudo apt-get upgrade -y
 - Node upgrade with nvm
