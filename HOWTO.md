@@ -2,44 +2,58 @@ Instructions on setting up your own website using Ghost on AWS
 
 Before you begin
 ----------------
-1. This is a horribly-rough draft. Still setting things up myself and iterating on it. Still setting things up myself. User beware. Please fix up if you can.
-2. You should probably just use (https://ghost.org/).  They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost.  These instructions are for those with unique requirements or who like tinkering around on AWS.  (I just happen to fall into both categories.)
-3. This is a very manual process.  Why not docker, chef, or your favorite install/deploy tool?  Perhaps later I try to something better, or at the very least I'll be adding some kind of scripting for updates.  I first wanted to  understand the basics of what's going on here.  (See the previous point about tinkering.)
+1. This is a horribly-rough draft. Still setting things up myself and iterating on it. Still setting things up myself. User beware. PRs welcome.
+2. You should probably just use https://ghost.org/.  They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost.  These instructions are for those with unique requirements or who like tinkering around on AWS.  (I just happen to fall into both categories.)
+3. This is a very manual process.  Why not Docker, Chef, or your favorite config/deploy tool?  Perhaps later I will try something better, or at the very least I'll be adding some kind of scripting for updates.  I first wanted to understand the basics of what's going on here.  (See the previous point about tinkering.)
 
 Initial Amazon setup
 ----------------
-http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/get-set-up-for-amazon-ec2.html
-You can skip "Create A Virtual Private Cloud" on this page.
+Go through http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/get-set-up-for-amazon-ec2.html. You can skip "Create A Virtual Private Cloud" on this page.
 
 EC2 Setup
 ----------------
-Following everything other than choosing Amazon Machine Image (step #3).  Choose the Ubuntu Server image instead.
-http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance_linux.html
+Go through http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance_linux.html. Following everything other than choosing Amazon Machine Image (step #3).  Choose the Ubuntu Server image instead.
 
 Connect to the instance
 ----------------
-Follow everything except use "ubuntu" instead of "ec2-user"
-http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-connect-to-instance-linux.html
-For instance, to connect on Mac or Linux, you would just do:
+Go through. http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-connect-to-instance-linux.html. Follow everything except use "ubuntu" instead of "ec2-user". For instance, to connect on Mac or Linux, you would just do this:
+```
 ssh -i /path/my-key-pair.pem ubuntu@public_dns_name
+```
 
 Prep Ubuntu
 ----------------
-Run the following, which will take a few minutes: "sudo apt-get update && sudo apt-get upgrade -y"
-You will likely be asked the following: "A new version of /boot/grub/menu.lst is available, but the version installed currently has been locally modified.  What would you like to do about menu.lst?"  Just press enter and choose the default, "keep the local version currently installed"
-sudo apt-get install -y unzip build-essential libssl-dev git
+Run the following to ensure Ubuntu is up to date. This will take a few minutes.
+```
+sudo apt-get update && sudo apt-get upgrade -y
+```
+You will likely be asked the following: "A new version of /boot/grub/menu.lst is available, but the version installed currently has been locally modified.  What would you like to do about menu.lst?"  Just press enter and choose the default, "keep the local version currently installed".
+
+Install some needed libraries. Add to the list anything you may want, like emacs.
+```
+sudo apt-get install -y unzip build-essential libssl-dev git nginx
+```
 
 Setup Node.js and related tools
 ----------------
+Install nvm to help wtih Node.js installations.
+```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.1/install.sh | bash
-log in again, or run "source ~/.profile"
+source ~/.profile
+```
 
+Then install the latest Node.js. The first command lists out the versions, so you can check to see if you want to install something even newer.
+```
+nvm ls-remote
 nvm install v4.1.2
 nvm alias default v4.1.2
 nvm use default
+```
 
 Install Ghost
 ----------------
+Time to install Ghost.  These steps are a bit different than the usual steps, as it's getting Ghost to work with Node 4.
+```
 sudo mkdir /var/www
 sudo chown -R ubuntu:ubuntu /var/www
 curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip
@@ -48,43 +62,53 @@ cd /var/www/ghost
 perl -pi -e 's/3.0.8/3.1.0/g' package.json
 perl -pi -e 's/~0.12.0/~0.12.0 || ^4.0.0/g' package.json
 rm npm-shrinkwrap.json
-(above three lines are done for Node 4.x support)
 npm install --production
-(ignore the warnings on the install)
+```
+Ignore the warnings on the npm install.
 
-Set up pm2 and startup script
+Set up PM2 and startup script
 ----------------
+We will use PM2 to keep Ghost going.
+```
 npm install -g pm2
 pm2 startup ubuntu -u ubuntu
-(and run the command pm2 tells you to run in the text)
+```
+The output of the second command above will tell you to run something.  Do this now.  Then continue on with the PM2 setup.
+```
 pm2 start /var/www/ghost/index.js --name ghost
 pm2 status
-(if you see an error above, look at the logs in $HOME/.pm2/logs for details)
+```
+If you see an error in the status call above, look at the logs in $HOME/.pm2/logs for details. If things look fine, save what has been done so PM2 will start up properly on restart.  (Or it should... this isn't working for me right now!)
+```
 pm2 save
+````
 
-Make sure now that nginx is running.  This return some html to the screen:
+Now you can make sure that Ghost is up and running.
+```
 curl http://localhost:2368
+```
 
 Create an Elastic IP
 ----------------
-In the navigation pane in the AWS UI, choose Elastic IPs.
-Choose Allocate New Address, and then Yes, Allocate.
-Note
-Select the Elastic IP address from the list, choose Actions, and then choose Associate Address.
-In the dialog box, choose Instance from the Associate with list, and then select your instance from the Instance list. Choose Yes, Associate when you're done.
-Copy down the Elastic IP, which is used below
-Doing this may change your "ssh" connection setup.  Look at the instance in the AWS UI again to get updated details if you are disconnected.
+Head into the AWS UI for some setup:
+1. In the navigation pane, choose Elastic IPs
+2. Choose Allocate New Address, and then Yes, Allocate. 
+3. Select the Elastic IP address from the list, choose Actions, and then choose Associate Address.
+4. In the dialog box, choose Instance from the Associate with list, and then select your instance from the Instance list. Choose Yes, Associate when you're done.
+5. Copy down the Elastic IP, which is used below
+
+Doing the above may change your "ssh" connection setup.  Look at the instance in the AWS UI again to get updated details if you are disconnected.
 
 Setup nginx
 ----------------
-Some people like to use port forwarding to port 80 instead of this, but I use nginx to also allow for some old static files from a previous website to be served.
+Some people like to use port forwarding to port 80 instead of this, but I use nginx to also allow for some old static files from a previous website to be served.  nginx was already installed above, and we just need to configure it now.
 
-sudo apt-get install nginx -y
-
+```
 sudo vi /etc/nginx/sites-available/default
+```
 
-Replace the existing server section with:
-
+Replace the existing server section with the following.  Substitute in your Elastic IP for x.x.x.x
+```
 server {
     listen 80;
     server_name x.x.x.x localhost;
@@ -93,42 +117,56 @@ server {
         proxy_pass http://127.0.0.1:2368;
     }
 }
+```
 
 If you have any additional files to serve, you can add these in now too.  For instance, I have an old blog where I still want to serve up most of the files from their original location.  This was a Movable Type blog, with the bulk of the files in /archive.  So I added this in too in the server block:
-
-# optional, just an example
+```
+    # optional, just an example
     location /archives {
         root /var/www;
     }
+```
 
-Reload nginx:
+Reload nginx to pick up the configuration changes.
+```
 sudo nginx -s reload
+```
 
-Try out:
+Now you should be able to see the same page you saw above, now through nginx on port 80.
+```
 curl http://localhost
+```
 
 Reboot and test
 ----------------
 sudo reboot.  Wait a minute for the instance to come back up, then log in again.  Then make sure the instance is still running:
 curl http://localhost
-(And this isn't working.  PM2 doesn't save as it should.)
+(And this isn't working for me!  PM2 doesn't save as it should, and instead I have to start PM2 again as show in the pm2 start commands above.)
 
 Create Route 53 route (optional)
 ----------------
-http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html
-remember a www cname
-switch domain in ghost/config.js.  You may be using the dev mode, as I am accidentily, so make sure to switch in the correct section
+If you want your own domain, Route 53 is a great way to go.  Needs to fill in more details here... I used http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html and some other docs.
+
+If you're new to DNS setups, it's easy to forget a www CNAME. Make sure to include this if you want www.yourdomainname.com to work. This doesn't by default: only yourdomainname.com (without the www) will resolve.
+
+I did not need to change anything in nginx after this, but you do need to edit the Ghost config.
+```
+vi /var/www/ghost/config.js
+```
+You may be using the dev mode, as I am accidentily (and which you are too if you followed these instructions exactly!) so make sure to switch in the correct section.
 
 Set up email (optional)
 ----------------
-set up mail, connect to gmail.  Try https://avix.co/blog/creating-your-own-mail-server-amazon-ec2-postfix-dovecot-postgresql-amavis-spamassassin-apache-and-squirrelmail-part-1/
+Still working on this myself. No simple, free options. Going to try out
+https://avix.co/blog/creating-your-own-mail-server-amazon-ec2-postfix-dovecot-postgresql-amavis-spamassassin-apache-and-squirrelmail-part-1/
 
 Set up EBS backup
 ----------------
-Just doing this manually in the UI right now.  Need to automate.
+Just doing this manually in the UI right now.  Need to automate. Lots of scripts out there for this.
 
-Set up billing alarm:
-http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html
+Set up billing alarm
+----------------
+Go through http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html
 
 Set up basic monitor(s)
 ----------------
@@ -136,8 +174,7 @@ Fill in, not doing yet. Lots of options here.
 
 Future updates
 ----------------
-(try on a new instance from a newly-created snapshot)
-http://support.ghost.org/how-to-upgrade/
+Haven't gone through this myself, but at some point I will want to update Ghost, or Node.js, or other things on the server.  Best to do this on a newly-created snapshot where you can test this out to ensure basic functionality works.  And then you can move over the Elastic IP to flip things over.  Ghost also has some docs here in http://support.ghost.org/how-to-upgrade/
 Things to update occasionally:
 - sudo apt-get update && sudo apt-get upgrade -y
 - Node upgrade with nvm
