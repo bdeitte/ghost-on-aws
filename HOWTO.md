@@ -4,7 +4,8 @@ Before you begin
 ----------------
 1. This is a rough draft. As you'll see in the notes below, I'm still setting things up and iterating on the guide. User beware. PRs welcome.
 2. You should probably stop reading and use https://ghost.org/ instead. They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.  (I just happen to fall into both categories.)
-3. This is a very manual process.  Why not Docker, Chef, or your favorite config/deploy tool?  I might try something better, or at the very least I'll be adding some kind of scripting for updates. But I first wanted to get something working and understand the basics of what's going on here.  (See the previous point about tinkering.)
+3. You should also probably stop reading this and set up on an easier-to-use platform, like Digital Ocean.  They are also a bit cheaper.  I'm really not selling this guide, am I?
+4. This is currently a fairly manual process.  It would be wonderful, at the very least, to use CloudFormation and some bash scripts to automate more of the below.  If you end up doing this, I would be more than happy to incorporate it in the below.
 
 Initial Amazon setup
 ----------------
@@ -78,7 +79,7 @@ The output of the second command above will tell you to run something.  Do this 
 pm2 start /var/www/ghost/index.js --name ghost
 pm2 status
 ```
-If you see an error in the status call above, look at the logs in $HOME/.pm2/logs for details. If things look fine, save what has been done so PM2 will start up properly on restart.  (Or it should... this isn't working for me right now!)
+If you see an error in the status call above, look at the logs in $HOME/.pm2/logs for details. If things look fine, save what has been done so PM2 will start up properly on restart.
 ```
 pm2 save
 ````
@@ -148,7 +149,7 @@ curl http://localhost
 
 Create Route 53 route (optional)
 ----------------
-If you want your own domain, Route 53 is a great way to go.  Needs to fill in more details here... I used http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html and some other docs.
+If you want your own domain, Route 53 is a great way to go.  Needs to fill in more details here... I used http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html and some other docs.  (Also see the Set up email section... I will be switching off of Route 53 to simplify email setup.)
 
 If you're new to DNS setups, it's easy to forget a www CNAME. Make sure to include this if you want www.yourdomainname.com to work. This doesn't by default: only yourdomainname.com (without the www) will resolve.
 
@@ -160,7 +161,7 @@ You may be using the dev mode, as I am accidentily (and which you are too if you
 
 Set up email (optional)
 ----------------
-Still working on this myself. No simple, free options. Going to try out
+I am likely going to do this by moving off of Route 53 and switching to Namecheap for DNS and email hosting.  If you have tons of time on your hands and like managing a mail server, you could instead use
 https://avix.co/blog/creating-your-own-mail-server-amazon-ec2-postfix-dovecot-postgresql-amavis-spamassassin-apache-and-squirrelmail-part-1/
 
 More application tinkering
@@ -185,4 +186,4 @@ I haven't gone through this myself, but at some point I will want to update Ghos
 Things to update occasionally:
 - sudo apt-get update && sudo apt-get upgrade -y
 - Node upgrade with nvm
-- npm install -g pm2 && pm2 update
+- npm install -g pm2 && pm2 updatePM2
