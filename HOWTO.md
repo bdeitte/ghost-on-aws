@@ -1,11 +1,10 @@
 Instructions on setting up your own website using Ghost, nginx, and Node 4.x on AWS
 
-Before you begin
+Cavaets
 ----------------
 1. This is a rough draft. As you'll see in the notes below, I'm still setting things up and iterating on the guide. User beware. PRs welcome.
-2. You should probably stop reading and use https://ghost.org/ instead. They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.  (I just happen to fall into both categories.)
-3. You should also probably stop reading this and set up on an easier-to-use platform, like Digital Ocean.  They are also a bit cheaper.  I'm really not selling this guide, am I?
-4. This is currently a fairly manual process.  It would be wonderful, at the very least, to use CloudFormation and some bash scripts to automate more of the below.  If you end up doing this, I would be more than happy to incorporate it in the below.
+2. You should probably stop reading and use https://ghost.org/ instead. They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.
+3. This is a fairly manual process.  It would be wonderful, at the very least, to use CloudFormation and some bash scripts to automate more of the below.  If you end up doing this, I would be more than happy to incorporate it in the below.
 
 Initial Amazon setup
 ----------------
@@ -53,19 +52,15 @@ nvm use default
 
 Install Ghost
 ----------------
-Time to install Ghost.  These steps are a little different than the usual steps, as it's getting Ghost to work with Node 4.
+Time to install Ghost. 
 ```
 sudo mkdir /var/www
 sudo chown -R ubuntu:ubuntu /var/www
 curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip
 unzip -uo ghost.zip -d /var/www/ghost
 cd /var/www/ghost
-perl -pi -e 's/3.0.8/3.1.0/g' package.json
-perl -pi -e 's/~0.12.0/~0.12.0 || ^4.0.0/g' package.json
-rm npm-shrinkwrap.json
 npm install --production
 ```
-Ignore the warnings on the npm install.
 
 Set up PM2 and startup script
 ----------------
@@ -145,11 +140,12 @@ sudo reboot.  Wait a minute for the instance to come back up, then log in again.
 ```
 curl http://localhost
 ```
-(And this isn't working for me!  PM2 doesn't save as it should, and instead I have to start PM2 again as show in the pm2 start commands above.)
 
 Create Route 53 route (optional)
 ----------------
-If you want your own domain, Route 53 is a great way to go.  Needs to fill in more details here... I used http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html and some other docs.  (Also see the Set up email section... I will be switching off of Route 53 to simplify email setup.)
+(See the Set up email section... I will be switching off of Route 53 to simplify email setup.)
+
+If you want your own domain, Route 53 is a great way to go.  Needs to fill in more details here... I used http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html and some other docs.  
 
 If you're new to DNS setups, it's easy to forget a www CNAME. Make sure to include this if you want www.yourdomainname.com to work. This doesn't by default: only yourdomainname.com (without the www) will resolve.
 
@@ -174,11 +170,18 @@ Just doing this manually in the UI right now.  Need to automate. Lots of scripts
 
 Set up billing alarm
 ----------------
-Go through http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html
+Make sure that you don't spend more money than you're expecting.  Go through http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html
 
-Set up basic monitor(s)
+Set up a basic monitor
 ----------------
-Fill in, not doing yet. Lots of options here- try to set up an external check of a page first. Pingdom is simple and free. RunScope is very nice if you have a subscription. There's some alerting for the EC2 instance, but I would focus on the external check first. Might have some other AWS options for this.
+There are some simple things you can do in AWS, but the most important thing to know is that your website is visible to the world.  This is easiest to do with a tool outside of AWS.  I prefer RunScope for this, and there is a simple free account you can sign up for.  To set up:
+- [Sign up](https://www.runscope.com/signup) for an account
+- Under "Monitor API Performance & Uptime", click "Get Started"
+- Enter the base URL for your website, or whatever page you want to set out for uptime.  Fill in the rest of the form however you'd like.
+- Next click on Tests, and then Skip Tutorial.  You should see your test.  
+- Click on Manage Shared Environements, then Bucket-wide Settings, then Notifications.  Select your email address, and then select "Notify only when a test run fails".
+
+There is a whole lot more you can do with RunScope, or with monitoring in general.  But this will at least start things off and let you know when your website has issues.
 
 Future updates
 ----------------
