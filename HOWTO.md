@@ -45,8 +45,8 @@ source ~/.profile
 Then install the latest Node.js. The first command lists out the versions, so you can check to see if you want to install something even newer.
 ```
 nvm ls-remote
-nvm install v4.1.2
-nvm alias default v4.1.2
+nvm install v4.2.4
+nvm alias default v4.2.4
 nvm use default
 ```
 
@@ -179,7 +179,7 @@ There are some simple things you can do in AWS, but the most important thing to 
 - Under "Monitor API Performance & Uptime", click "Get Started"
 - Enter the base URL for your website, or whatever page you want to set out for uptime.  Fill in the rest of the form however you'd like.
 - Next click on Tests, and then Skip Tutorial.  You should see your test.  
-- Click on Manage Shared Environements, then Bucket-wide Settings, then Notifications.  Select your email address, and then select "Notify only when a test run fails".
+- Click on Manage Shared Environements, then Bucket-wide Settings, then Notifications.  Select your email address, and then select "Notify after the test fails in a location" and "and again after the test returns to passing.".
 
 There is a whole lot more you can do with RunScope, or with monitoring in general.  But this will at least start things off and let you know when your website has issues.
 
