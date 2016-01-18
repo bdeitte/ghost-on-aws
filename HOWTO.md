@@ -1,9 +1,9 @@
-Instructions on setting up your own website using Ghost, nginx, and Node 4.x on AWS
+Instructions on setting up your own website using Ghost, nginx, and Node 4.x on AWS and Namecheap.
 
 Cavaets
 ----------------
 1. This is a rough draft. As you'll see in the notes below, I'm still setting things up and iterating on the guide. User beware. PRs welcome.
-2. You should probably stop reading and use https://ghost.org/ instead. They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.
+2. You should probably stop reading and use https://ghost.org/ instead. They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.  Seriously, go check out https://ghost.org
 3. This is a fairly manual process.  It would be wonderful, at the very least, to use CloudFormation and some bash scripts to automate more of the below.  If you end up doing this, I would be more than happy to incorporate it in the below.
 
 Initial Amazon setup
@@ -141,32 +141,31 @@ sudo reboot.  Wait a minute for the instance to come back up, then log in again.
 curl http://localhost
 ```
 
-Create Route 53 route (optional)
+Create domain on Namecheap (optional)
 ----------------
-(See the Set up email section... I will be switching off of Route 53 to simplify email setup.)
+I chose Namecheap instead of Amazon's Route 53 because I was planning to use Namecheap's email hosting service as well (which I describe in the next section).  It also turns out that Namecheap is cheaper and generally easier to use.
 
-If you want your own domain, Route 53 is a great way to go.  Needs to fill in more details here... I used http://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html and some other docs.  
+To set up, go to [Namecheap](https://www.namecheap.com/) and register or transfer the domain you want.  The process is fairly straightforward.  When you get to setting up the domain, go into "Advanced DNS" for the domain and create an "A Record".  Set the "Host" as "@" and set the Value as the Elastic IP you set up above.  Save this, and this create a second "A Record"  Set the "Host" as "www" and set the Value as the same Elastic IP you set up above.
 
-If you're new to DNS setups, it's easy to forget a www CNAME. Make sure to include this if you want www.yourdomainname.com to work. This doesn't by default: only yourdomainname.com (without the www) will resolve.
-
-I did not need to change anything in nginx after this, but you do need to edit the Ghost config.
+After the domain started resolving, I did not need to change anything in nginx.  You do though need to make a small edit to the Ghost config.
 ```
 vi /var/www/ghost/config.js
 ```
-You may be using the dev mode, as I am accidentily (and which you are too if you followed these instructions exactly) so make sure to switch in the correct section.
+You may be using the dev mode, as I am accidentily (and which you are too if you followed these instructions exactly) so make sure to switch the domain in the correct section.
 
 Set up email (optional)
 ----------------
-I am likely going to do this by moving off of Route 53 and switching to Namecheap for DNS and email hosting.  If you have tons of time on your hands and like managing a mail server, you could instead use
-https://avix.co/blog/creating-your-own-mail-server-amazon-ec2-postfix-dovecot-postgresql-amavis-spamassassin-apache-and-squirrelmail-part-1/
+Amazon does not have email hosting for individuals, a painful point I found out in time.  I ended up using [Namecheap email hosting](https://www.namecheap.com/hosting/email.aspx) which I then forward on to Gmail.  The setup for this is pretty much automatic if you're using Namecheap for domain hosting as well.
+
+If you have tons of time on your hands and like managing a mail server, you could [build something yourself](https://avix.co/blog/creating-your-own-mail-server-amazon-ec2-postfix-dovecot-postgresql-amavis-spamassassin-apache-and-squirrelmail-part-1/).  But that's even more overkill than the rest of this, especially for personal projects.
 
 More application tinkering
 ----------------
-Need to add info about adding in comments, log rotation (if needed, haven't looked), and seeing traffic (through log grepping for now).
+Need to add info about adding in comments (Disqus), log rotation (if needed, haven't looked), and seeing traffic (through log grepping for now, should enable Google Analytics).
 
 Set up EBS backup
 ----------------
-Just doing this manually in the UI right now.  Need to automate. Lots of scripts out there for this.
+Still need to add in info here for how I did this with https://www.flynsarmy.com/2015/06/how-to-schedule-daily-rolling-ebs-snapshots/ as a guide
 
 Set up billing alarm
 ----------------
