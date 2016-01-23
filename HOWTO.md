@@ -1,10 +1,8 @@
-Instructions on setting up your own website using Ghost, nginx, and Node 4.x on AWS and Namecheap.
+Below are instructions on setting up your own website using Ghost, nginx, and Node 4.x on AWS and Namecheap.  See [my blog post on the subject](http://deitte.com/ghost-on-aws/) for where this is used. As I note in places below, I'm still setting some pieces up and iterating on the guide. PRs welcome!
 
-Cavaets
-----------------
-1. This is a rough draft. As you'll see in the notes below, I'm still setting things up and iterating on the guide. User beware. PRs welcome.
-2. You should probably stop reading and use https://ghost.org/ instead. They have good prices, it's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.  Seriously, go check out https://ghost.org
-3. This is a fairly manual process.  It would be wonderful, at the very least, to use CloudFormation and some bash scripts to automate more of the below.  If you end up doing this, I would be more than happy to incorporate it in the below.
+Before you go any further here: have you looked into the plans on https://ghost.org/ enough?  It's nearly the same price as setting up on AWS, or perhaps less expensive in some cases.  It's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.  
+
+This guide was used to set up a personal blog, http://deitte.com.  If you are planning for something big, I would add in an ELB, a cluster in more than one availability zone, and a bunch more below.  I would also automate a lot of the below.  It would be wonderful, at the very least, to use CloudFormation and some bash scripts to automate more of the below.  Even more wonderful to use some Ansible/Chef/Docker/etc.  If you end up doing this, I would be happy to incorporate these details in the instructions below.
 
 Initial Amazon setup
 ----------------
@@ -159,9 +157,13 @@ Amazon does not have email hosting for individuals, a painful point I found out 
 
 If you have tons of time on your hands and like managing a mail server, you could [build something yourself](https://avix.co/blog/creating-your-own-mail-server-amazon-ec2-postfix-dovecot-postgresql-amavis-spamassassin-apache-and-squirrelmail-part-1/).  But that's even more overkill than the rest of this, especially for personal projects.
 
+Set up CloudFront and SSL (optional)
+----------------
+I haven't done this part, but it makes sense to use Amazon's CDN in front of your EC2 instance, both for faster response times and to use a smaller instance that will handle load better.  Using CloudFront also gives you HTTPS for free, with the [AWS Certificate Manager](https://aws.amazon.com/certificate-manager/).
+
 More application tinkering
 ----------------
-Need to add info about adding in comments (Disqus), log rotation (if needed, haven't looked), and seeing traffic (through log grepping for now, should enable Google Analytics).
+Need to add info about adding in comments (Disqus), log rotation (if needed, haven't looked), and seeing traffic (through Google Analytics).
 
 Set up EBS backup
 ----------------
