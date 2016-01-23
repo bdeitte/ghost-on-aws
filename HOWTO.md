@@ -1,8 +1,8 @@
 Below are instructions on setting up your own website using Ghost, nginx, and Node 4.x on AWS and Namecheap.  See [my blog post on the subject](http://deitte.com/ghost-on-aws/) for where this is used. As I note in places below, I'm still setting some pieces up and iterating on the guide. PRs welcome!
 
-Before you go any further here: have you looked into the plans on https://ghost.org/ enough?  It's nearly the same price as setting up on AWS, or perhaps less expensive in some cases.  It's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.  
+Before you go any further here: have you looked into the plans on https://ghost.org/pricing/ enough?  It's nearly the same price as setting up on AWS, or perhaps less expensive in some cases.  It's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.  
 
-This guide was used to set up a personal blog, http://deitte.com.  If you are planning for something big, I would add in an ELB, a cluster in more than one availability zone, and a bunch more below.  I would also automate a lot of the below.  It would be wonderful, at the very least, to use CloudFormation and some bash scripts to automate more of the below.  Even more wonderful to use some Ansible/Chef/Docker/etc.  If you end up doing this, I would be happy to incorporate these details in the instructions below.
+This guide was used to set up a personal blog, http://deitte.com.  If you are planning for something big, I would add in an ELB, a cluster in more than one availability zone, and a bunch more below.  I would also automate a lot of the below.  It would be wonderful, at the very least, to use CloudFormation and some bash scripts to automate more of the below.  Even more wonderful to use some Ansible/Chef/Docker/etc.  If you end up doing any shortening of the steps, I would be happy to incorporate these details in the instructions below.
 
 Initial Amazon setup
 ----------------
