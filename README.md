@@ -1,8 +1,9 @@
 These are instructions on setting up your own website using Ghost, nginx, and Node 4.x on AWS and Namecheap.  See [my blog post on the subject](http://deitte.com/ghost-on-aws/) for the blog where this setup is used.
 
-Before you go any further here: have you looked into the plans on https://ghost.org/pricing/ enough?  It's nearly the same price as setting up on AWS, or perhaps less expensive in some cases.  It's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. These instructions are for those with unique requirements or who like tinkering around on AWS.
+Before going any further, two important things to understand:
 
-This guide was used to set up a personal blog.  If you are planning for something big, I would add in an ELB, a cluster in more than one availability zone, and a bunch more below.  I would also automate a lot of the below.  It would be wonderful to use CloudFormation or Elastic Beanstalk and some more bash scripts to automate most of the below.  Or Ansible/Chef/Docker/etc.  If you end up doing any shortening of the steps, I'll incorporate these details in the instructions below.
+1. These instructions are for those with unique Ghost requirements or who like tinkering around on AWS.  If I didn't fall into both those categories and wanted a Ghost blog, I would use one of the plans on https://ghost.org/pricing/. It's nearly the same price as setting up on AWS, or perhaps less expensive in some cases.  It's a whole lot simpler, and then you're supporting the non-profit that works on Ghost. 
+2. This guide was used to set up a modest personal blog.  If you are planning for something big, I would add in an ELB, a cluster in more than one availability zone, and a bunch more below.  I would also automate a lot of the below.  It would be wonderful to use CloudFormation or Elastic Beanstalk and some more bash scripts to automate most of the below.  Or Ansible/Chef/Docker/etc.  If you end up doing any shortening of the steps, I'll incorporate these details in the instructions below.
 
 **Table of Contents**
 
@@ -173,11 +174,7 @@ I haven't done this part, but it makes sense to use Amazon's CDN in front of you
 Need to add info about adding in comments (Disqus), log rotation (if needed, haven't looked), and seeing traffic (through Google Analytics).
 
 ## Set up EBS backup
-Below I've modified the scripts and steps from a [https://www.flynsarmy.com/2015/06/how-to-schedule-daily-rolling-ebs-snapshots/](blog post on the subject).
-
-(still writing)
-
-curl -o ssbackup.py https://raw.githubusercontent.com/bdeitte/ghost-on-aws/master/scripts/ssbackup.py
+Follow the steps in my separate guide on [setup for scheduled EBS snapshots](https://github.com/bdeitte/scheduled-snapshots).  
 
 ## Set up billing alarm
 Make sure that you don't spend more money than you're expecting.  Go through http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html
