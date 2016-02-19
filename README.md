@@ -191,8 +191,55 @@ There are some simple things you can do in AWS, but the most important thing to 
 There is a whole lot more you can do with RunScope, or with monitoring in general.  But this will at least start things off and let you know when your website has issues.
 
 ## Future updates
-I haven't gone through this myself, but at some point I will want to update Ghost, or Node.js, or other things on the server.  It's to do this on a newly-created snapshot where you can test this out to ensure basic functionality works.  And then you can move over the Elastic IP to flip things over.  Ghost also has some docs here in http://support.ghost.org/how-to-upgrade/
-Things to update occasionally:
-- sudo apt-get update && sudo apt-get upgrade -y
-- Node upgrade with nvm
-- npm install -g pm2 && pm2 updatePM2
+
+After you've had the above running for awhile, you will want to make some updates to the system and programs sometimes. There are a lot of ways to do this, some safer than others in dealing with things going awry. The below is an approach that works well for a small blog, making the changes on the live server but providing multiple restore options.
+
+To start off:
+- Go into the Ghost Admin, click on Labs, then click on Export.  Save this file as way to restore Ghost.
+- ssh into your instance
+- Run "sudo crontab -l"
+- Copy the part of the line seen in the crontab output that starts with "python3 /usr/local/bin/ssbackup.py".  This is the EBS backup mechanism you set up above.  Paste that line into your console but starting with "sudo".  This should run with no output, after which you will have a new EBS snapshot of your data for restoring your whole instance.
+
+Decide on what to upgrade:
+- Looking to upgrade Ghost?  Run "grep 'version' /var/www/ghost/package.json" to see what version you are on.  Look at https://github.com/TryGhost/Ghost/releases to see what upgrading to the newest version will do.
+- Looking to upgrade PM2?  Run "pm2 --version" to see what version you are on.  Look at https://github.com/Unitech/pm2/blob/master/CHANGELOG.md to see what upgrading to the newest version will do.
+- Looking to upgrade Node?  Run "node --version" to see what version you are on.  Look at https://github.com/nodejs/node/blob/master/CHANGELOG.md to see what upgrading to the newest version will do.  I suggest staying on the 4.x LTS release line for now, but the choice of course is up to you.
+- Looking to upgrade everything else?  Sure, why not!  This is done with apt-get, and describing all the changes just isn't as simple as the above.  So be careful, but it's certainly good to do to get the latest security patches through here when you can.
+
+Upgrade Ghost:
+Use the [Ghost upgrade](https://github.com/bdeitte/ghost-upgrade) tool I've created:
+```
+npm install -g ghost-upgrade
+ghost-upgrade --yes --location /var/www/ghost --copy-casper
+pm2 restart
+```
+
+Upgrade PM2:
+```
+npm install -g pm2
+pm2 update
+```
+
+Upgrade Node:
+First run "nvm list" to make sure you have the right name for the current Node version that nvm uses, and use that where {old_version} is given below.
+```
+pm2 kill
+nvm install 4
+nvm reinstall-packages {old_version}
+pm2 start /var/www/ghost/index.js --name ghost
+nvm alias default 4
+nvm uninstall {old_version}
+```
+
+Upgrade everything else:
+```
+sudo apt-get update && sudo apt-get upgrade -y
+```
+
+After upgrades:
+Sanity test everything you can!
+
+If things go bad:
+There are two restore points created in case things go bad.  
+1. The simple one, if Ghost seems to not behave properly, is to use the json file exported above.  After setting up Ghost again to work, go to the Ghost Admin and import the XML in the Labs section.
+2. The slightly-harder one (but easier to know you go back to a working point) is to use the EBS snapshot created above.  You need to [restore the snapshot](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-restoring-volume.html) and use it on a new instance you create.  The Elastic IP set up will also need to be switched to this new instance.
