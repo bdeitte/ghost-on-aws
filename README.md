@@ -211,7 +211,7 @@ Use the [Ghost upgrade](https://github.com/bdeitte/ghost-upgrade) tool I've crea
 ```
 npm install -g ghost-upgrade
 ghost-upgrade --yes --location /var/www/ghost --copy-casper
-pm2 restart
+pm2 restart all
 ```
 
 Upgrade PM2:
