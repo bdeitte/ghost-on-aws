@@ -58,12 +58,11 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.1/install.sh | b
 source ~/.profile
 ```
 
-Then install the latest Node.js. The first command lists out the versions, so you can check to see if you want to install something even newer.
+Then install the latest Node 4.
 ```
 nvm ls-remote
-nvm install v4.2.4
-nvm alias default v4.2.4
-nvm use default
+nvm install 4
+nvm alias default 4
 ```
 
 ## Install Ghost
@@ -207,6 +206,7 @@ Decide on what to upgrade:
 - Looking to upgrade everything else?  Sure, why not!  This is done with apt-get, and describing all the changes just isn't as simple as the above.  So be careful, but it's certainly good to do to get the latest security patches through here when you can.
 
 Upgrade Ghost:
+
 Use the [Ghost upgrade](https://github.com/bdeitte/ghost-upgrade) tool I've created:
 ```
 npm install -g ghost-upgrade
@@ -221,6 +221,7 @@ pm2 update
 ```
 
 Upgrade Node:
+
 First run "nvm list" to make sure you have the right name for the current Node version that nvm uses, and use that where {old_version} is given below.
 ```
 pm2 kill
@@ -232,14 +233,17 @@ nvm uninstall {old_version}
 ```
 
 Upgrade everything else:
+
 ```
 sudo apt-get update && sudo apt-get upgrade -y
 ```
 
 After upgrades:
+
 Sanity test everything you can!
 
 If things go bad:
+
 There are two restore points created in case things go bad.  
 
 1. The simple one, if Ghost seems to not behave properly, is to use the json file exported above.  After setting up Ghost again to work, go to the Ghost Admin and import the XML in the Labs section.
