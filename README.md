@@ -4,7 +4,7 @@ Before going any further, there are a few important things to understand:
 
 1. These instructions are for those with unique Ghost requirements or who like tinkering around on AWS.  If I didn't fall into both those categories and wanted a Ghost blog, I would use one of the plans on https://ghost.org/pricing/. It's nearly the same price as setting up on AWS, or perhaps less expensive.  It's a whole lot simpler than these instructions, and then you're supporting the non-profit that works on Ghost. 
 2. This guide was used to set up a modest personal blog.  If you are planning for something big, I would add in an ELB, a cluster in more than one availability zone, and a bunch more below.  This isn't a bad starting point, but don't think this is all you need for your big site!  I would also automate a lot of the below.  It would be wonderful to use CloudFormation or Elastic Beanstalk and some more bash scripts to automate most of the below.  Or switch even more of this to [use Docker](https://github.com/docker-library/ghost).  If you end up doing any better automation of the steps, I'll incorporate these details in the instructions below.
-3. AWS, Ghost, and all the rest below is always changing.  If instructions aren't working, and you figure out how to get things to work again, PRs are welcome to fix this up.
+3. AWS, Ghost, and all the rest below is always changing.  If instructions aren't working, and you figure out how to get things to work again, PRs are welcome to fix this up.  Or if you improve on it, fixing any of the [open issues](https://github.com/bdeitte/ghost-on-aws/issues), that's most welcome too of course!
 
 **Table of Contents**
 
