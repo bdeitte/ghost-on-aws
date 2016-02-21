@@ -77,7 +77,7 @@ npm install --production
 ```
 
 ## Set up PM2 and startup script
-We will use PM2 to keep Ghost going.
+We will use PM2 to keep Ghost going.  It would be best to run PM2 as a different user, but we use ubuntu below.  Feel free to create a new user and alter further instructions to use this new user (and then send on a PR with such changes in it!)
 ```
 npm install -g pm2
 pm2 startup ubuntu -u ubuntu
@@ -236,7 +236,9 @@ Upgrade everything else:
 
 ```
 sudo apt-get update && sudo apt-get upgrade -y
+sudo reboot
 ```
+Wait a minute for the instance to come back up, then log in again.  Then make sure the instance is still running.
 
 After upgrades:
 
