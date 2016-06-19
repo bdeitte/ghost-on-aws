@@ -180,14 +180,7 @@ Follow the steps in my separate guide on [setup for scheduled EBS snapshots](htt
 Make sure that you don't spend more money than you're expecting.  Go through http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html
 
 ## Set up a basic monitor
-There are some simple things you can do in AWS, but the most important thing to know is that your website is visible to the world.  This is easiest to do with a tool outside of AWS.  I prefer RunScope for this, and there is a simple free account you can sign up for.  To set up:
-- [Sign up](https://www.runscope.com/signup) for an account
-- Under "Monitor API Performance & Uptime", click "Get Started"
-- Enter the base URL for your website, or whatever page you want to set out for uptime.  Fill in the rest of the form however you'd like.
-- Next click on Tests, and then Skip Tutorial.  You should see your test.
-- Click on Manage Shared Environements, then Bucket-wide Settings, then Notifications.  Select your email address, and then select "Notify after the test fails in a location" and "and again after the test returns to passing.".
-
-There is a whole lot more you can do with RunScope, or with monitoring in general.  But this will at least start things off and let you know when your website has issues.
+There are some simple things you can do in AWS, but the most important thing to know is that your website is visible to the world.  This is easiest to do with a tool outside of AWS.  I used to suggest RunScope in this section, but they are shutting down their free tier.  Feel free to fill this in with a better suggestion!
 
 ## Future updates
 
