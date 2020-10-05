@@ -29,6 +29,10 @@ using "ubuntu" for "my"instance-user-name". For instance, to connect on Mac or L
 ssh -i /path/my-key-pair.pem ubuntu@public_ip
 ```
 
+Remember if you followed AWS' guidance on restriction access to port
+22 (as you should), you may need to update in AWS later if your own IP
+address changes.
+
 ## Follow Ghost's Guide
 
 Now it's on to
@@ -82,4 +86,5 @@ There are some simple things you can do in AWS, but the most important thing to 
 ## Other things to think about
 
 Plenty more to do as things go forward!  Make sure you think about how
-you do updates, to the server pieces and Ghost.  Pay attention
+you do updates, to the server pieces and Ghost.  Pay attention to the
+backups, ensure everything keeps occuring as expected.
