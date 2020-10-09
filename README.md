@@ -5,7 +5,8 @@ Before going any further, there are a few important things to understand:
 
 1. These instructions are for those with unique Ghost requirements or
    who like tinkering around on AWS.  If I didn't fall into both those
-   categories and wanted a professional Ghost blog, I would use one of the plans on https://ghost.org/pricing/.
+   categories and wanted a professional Ghost blog, I would use one of
+   the plans from [ghost.org](https://ghost.org/pricing/).
 2. This guide was used to set up a modest personal blog.  If you are
    planning for something big, I would add in an ELB, a cluster in
    more than one availability zone, more analytics, and a bunch more below.  This
@@ -86,8 +87,7 @@ Or use AWS Backup.
 
 ## Set up billing alarm
 Make sure that you don't spend more money than you're expecting.  Go
-through
-[http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html](free
+through [http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html](free
 tier alarms).
 
 ## Set up a basic monitor
@@ -100,10 +100,10 @@ both Ghost and what else is installed on your server.   To help with
 this, I automatically have security updates installed for the server
 with:
 
-``
+```
 sudo apt-get install unattended-upgrades
 sudo dpkg-reconfigure unattended-upgrades
-``
+```
 
 You should have a basic synthetic monitor setup to alert you if the
 blog is up or down.  There's many good products that include this,
