@@ -87,8 +87,7 @@ Or use AWS Backup.
 
 ## Set up billing alarm
 Make sure that you don't spend more money than you're expecting.  Go
-through [http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html](free
-tier alarms).
+through [free tier alarms](http://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/free-tier-alarms.html).
 
 ## Set up a basic monitor
 There are some simple things you can do in AWS, but the most important thing to know is that your website is visible to the world.  This is easiest to do with a tool outside of AWS.
