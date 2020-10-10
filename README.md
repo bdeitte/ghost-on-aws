@@ -109,5 +109,8 @@ You should have a basic synthetic monitor setup to alert you if the
 blog is up or down.  There's many good products that include this,
 like Datadog, or you can look to use [Cloudwatch](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries.html).
 
+If you want a www version of your domain,
+[follow this guide](https://www.digitalocean.com/community/questions/how-to-set-www-subdomain-for-one-click-ghost-with-ssl).
+
 Many more things you could do to make things better, as noted in the
 intro.  Feel free to open a PR if you see anything I've missed.
