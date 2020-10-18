@@ -24,7 +24,7 @@ Then go through step #1 in
 [the AWS guide for EC2 launching](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-launch-instance_linux.html). Follow
 everything other than choosing Amazon Machine Image (step #3). Choose
 the Ubuntu Server 16 image instead.  As for the size of your instance,
-I have found the tiny t3a.nano works just fine for a low-traffic blog.
+I have found the tiny t3a.micro works just fine for a low-traffic blog.
 
 ## Connect to the instance
 [Connect to the
