@@ -1,3 +1,5 @@
+**This hasn't been maintained for years, so much of this may no longer work. Feel free to grab anything that may be still useful.**
+
 These are instructions on setting up your own website using Ghost,
 AWS, and Namecheap.  It was used to set up [deitte.com](http://deitte.com/).
 
